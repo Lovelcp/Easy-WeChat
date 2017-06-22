@@ -2,21 +2,19 @@ package com.wooyoo.wechat;
 
 import com.wooyoo.wechat.constant.URLs;
 import com.wooyoo.wechat.exception.WeChatException;
+import com.wooyoo.wechat.http.SimpleCookieJar;
 import com.wooyoo.wechat.util.QRCodeUtil;
+import com.wooyoo.wechat.util.RegexUtil;
+import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.BufferedInputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +23,12 @@ public class Main {
 
         //@see http://stackoverflow.com/questions/7615645/ssl-handshake-alert-unrecognized-name-error-since-upgrade-to-java-1-7-0/
         System.setProperty("jsse.enableSNIExtension", "false");
+        final OkHttpClient httpClient = new OkHttpClient.Builder().readTimeout(60, TimeUnit.SECONDS)
+                                                                  .connectTimeout(60, TimeUnit.SECONDS)
+                                                                  .cookieJar(new SimpleCookieJar())
+                                                                  .build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(URLs.BASE_LOGIN_URL)
+                                                  .client(httpClient)
                                                   .build();
 
         WeChatHttpService weChatService = retrofit.create(WeChatHttpService.class);
@@ -42,7 +45,7 @@ public class Main {
             String uuid = m.group(1);
             System.out.println(uuid);
 
-            Call<ResponseBody> downloadCall = weChatService.downloadQRCode(uuid);
+            Call<ResponseBody> downloadCall = weChatService.showQRCode(uuid);
             downloadCall.enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -56,6 +59,7 @@ public class Main {
                         QRCodeUtil.printQRCodeInTerminal(url);
                     }
                     catch (Throwable t) {
+                        // TODO Log
                         throw new WeChatException("Download QRCode image failed", t);
                     }
                 }
@@ -65,6 +69,41 @@ public class Main {
                     throw new WeChatException("Download QRCode image failed", t);
                 }
             });
+
+            while (true) {
+                Call<ResponseBody> waitCall = weChatService.waitForLogin(true, uuid, 0);
+                Response<ResponseBody> waitResponse = waitCall.execute();
+
+                if (waitResponse.isSuccessful()) {
+                    ResponseBody waitResponseBody = waitResponse.body();
+                    String waitResponseBodyStr = waitResponseBody.string();
+                    System.out.println(waitResponseBodyStr);
+
+                    String code = RegexUtil.fetch("window.code=(\\d+);", waitResponseBodyStr);
+                    if (Objects.equals(code, "408")) {
+                        // TODO LOG
+                        continue;
+                    }
+                    else if (Objects.equals(code, "201")) {
+                        // TODO LOG
+                        // 扫描二维码成功
+                        System.out.println("等待在手机上点击确认按钮");
+                    }
+                    else if (Objects.equals(code, "200")) {
+                        String redirectUri = RegexUtil.fetch("window.redirect_uri=\"(.*)\";", waitResponseBodyStr);
+                        // TODO 根据redirectUri设置微信的host，比如wx2/wx3这样的
+                        redirectUri += "&fun=new";
+
+                        String loginResult = weChatService.login(redirectUri).execute().body().string();
+                        System.out.println(loginResult);
+
+                        // TODO 解析登录成功的信息
+
+
+                        break;
+                    }
+                }
+            }
         }
 
     }
