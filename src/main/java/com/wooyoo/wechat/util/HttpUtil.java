@@ -4,12 +4,13 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 public final class HttpUtil {
-    private HttpUtil() {}
+    private HttpUtil() {
+    }
 
-    public static String getHost(String url) {
+    public static String getSchemeWithHost(String url) {
         try {
             URI uri = new URI(url);
-            return uri.getHost();
+            return uri.getScheme() + "://" + uri.getHost();
         }
         catch (URISyntaxException e) {
             e.printStackTrace();

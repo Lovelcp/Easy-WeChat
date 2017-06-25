@@ -1,14 +1,21 @@
-package com.wooyoo.wechat;
+package com.wooyoo.wechat.http.api;
 
+import com.wooyoo.wechat.http.request.InitRequest;
+import com.wooyoo.wechat.http.response.InitResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 import retrofit2.http.Streaming;
 import retrofit2.http.Url;
 
-public interface WeChatHttpService {
+/**
+ * 登录相关的接口
+ */
+public interface WeChatLoginApi {
 
     /**
      * 获取UUID
@@ -55,6 +62,31 @@ public interface WeChatHttpService {
             @Query("tip")
                     int tip);
 
+    /**
+     * 底层登录接口，用于获取cookie等信息
+     *
+     * @param loginUrl
+     * @return
+     */
     @GET
-    Call<ResponseBody> login(@Url String loginUrl);
+    Call<ResponseBody> login(
+            @Url
+                    String loginUrl);
+
+    /**
+     * 微信初始化
+     *
+     * @param passTicket
+     * @param skey
+     * @param initRequest
+     * @return
+     */
+    @POST("cgi-bin/mmwebwx-bin/webwxinit")
+    Call<InitResponse> init(
+            @Query("pass_ticket")
+                    String passTicket,
+            @Query("skey")
+                    String skey,
+            @Body
+                    InitRequest initRequest);
 }

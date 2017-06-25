@@ -21,21 +21,9 @@ public class Test {
         GitHubService service = retrofit.create(GitHubService.class);
 
         Call<List<Repo>> repos = service.listRepos("octocat");
+        repos.execute().body().forEach(repo -> System.out.println(repo.getId()));
+        retrofit = retrofit.newBuilder().baseUrl("https://www.baidu.com").build();
+        service.listRepos("octocat").execute().body().forEach(repo -> System.out.println(repo.getId()));
 
-        repos.enqueue(new Callback<List<Repo>>() {
-            @Override
-            public void onResponse(Call<List<Repo>> call, Response<List<Repo>> response) {
-                List<Repo> result = response.body();
-                assert result != null;
-                result.forEach(repo -> System.out.println(repo.getId()));
-            }
-
-            @Override
-            public void onFailure(Call<List<Repo>> call, Throwable t) {
-
-            }
-        });
-
-        repos.cancel();
     }
 }
