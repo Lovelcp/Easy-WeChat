@@ -1,7 +1,7 @@
 package com.wooyoo.wechat.http.api;
 
-import com.wooyoo.wechat.http.request.InitRequest;
-import com.wooyoo.wechat.http.response.InitResponse;
+import com.wooyoo.wechat.http.request.login.InitRequest;
+import com.wooyoo.wechat.http.response.login.InitResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;

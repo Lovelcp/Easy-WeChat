@@ -1,8 +1,9 @@
-package com.wooyoo.wechat.http.response;
+package com.wooyoo.wechat.http.response.login;
 
-import com.wooyoo.wechat.http.common.Contact;
-import com.wooyoo.wechat.http.common.SyncKey;
-import com.wooyoo.wechat.http.common.User;
+import com.wooyoo.wechat.http.model.Contact;
+import com.wooyoo.wechat.http.model.SyncKey;
+import com.wooyoo.wechat.http.model.User;
+import com.wooyoo.wechat.http.response.common.BaseResponse;
 
 import java.util.List;
 
@@ -25,11 +26,11 @@ public class InitResponse {
     private Long SystemTime;
     private User User;
 
-    public InitResponse.BaseResponse getBaseResponse() {
+    public BaseResponse getBaseResponse() {
         return BaseResponse;
     }
 
-    public void setBaseResponse(InitResponse.BaseResponse baseResponse) {
+    public void setBaseResponse(BaseResponse baseResponse) {
         BaseResponse = baseResponse;
     }
 
@@ -113,11 +114,11 @@ public class InitResponse {
         this.SKey = SKey;
     }
 
-    public com.wooyoo.wechat.http.common.SyncKey getSyncKey() {
+    public com.wooyoo.wechat.http.model.SyncKey getSyncKey() {
         return SyncKey;
     }
 
-    public void setSyncKey(com.wooyoo.wechat.http.common.SyncKey syncKey) {
+    public void setSyncKey(com.wooyoo.wechat.http.model.SyncKey syncKey) {
         SyncKey = syncKey;
     }
 
@@ -129,32 +130,12 @@ public class InitResponse {
         SystemTime = systemTime;
     }
 
-    public com.wooyoo.wechat.http.common.User getUser() {
+    public com.wooyoo.wechat.http.model.User getUser() {
         return User;
     }
 
-    public void setUser(com.wooyoo.wechat.http.common.User user) {
+    public void setUser(com.wooyoo.wechat.http.model.User user) {
         User = user;
     }
 
-    public class BaseResponse {
-        private String ErrMsg;
-        private int Ret;
-
-        public String getErrMsg() {
-            return ErrMsg;
-        }
-
-        public void setErrMsg(String errMsg) {
-            ErrMsg = errMsg;
-        }
-
-        public int getRet() {
-            return Ret;
-        }
-
-        public void setRet(int ret) {
-            Ret = ret;
-        }
-    }
 }

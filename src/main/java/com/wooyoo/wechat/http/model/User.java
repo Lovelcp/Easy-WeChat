@@ -1,4 +1,4 @@
-package com.wooyoo.wechat.http.common;
+package com.wooyoo.wechat.http.model;
 
 public class User {
     private int AppAccountFlag;

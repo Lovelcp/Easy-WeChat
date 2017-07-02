@@ -12,13 +12,11 @@ import retrofit2.converter.jackson.JacksonConverterFactory;
 
 import java.util.concurrent.TimeUnit;
 
-public class ApiGenerator {
-    private final String DEFAULT_BASE_URL = "https://login.wx.qq.com/";
-
+public class ApiFactory {
     private OkHttpClient okHttpClient;
     private Retrofit retrofit;
 
-    public ApiGenerator() {
+    public ApiFactory(String baseUrl) {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -27,7 +25,7 @@ public class ApiGenerator {
                                                       .cookieJar(new SimpleCookieJar())
                                                       .addInterceptor(logging)
                                                       .build();
-        this.retrofit = new Retrofit.Builder().baseUrl(DEFAULT_BASE_URL)
+        this.retrofit = new Retrofit.Builder().baseUrl(baseUrl)
                                               .addConverterFactory(JacksonConverterFactory.create(
                                                       new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                                                                         .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
@@ -41,9 +39,9 @@ public class ApiGenerator {
         return retrofit.create(serviceClass);
     }
 
-    public void changeBaseUrl(String newBaseUrl) {
+    public void setBaseUrl(String baseUrl) {
         retrofit = retrofit.newBuilder()
-                           .baseUrl(newBaseUrl)
+                           .baseUrl(baseUrl)
                            .build();
     }
 }

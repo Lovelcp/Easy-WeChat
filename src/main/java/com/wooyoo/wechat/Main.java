@@ -13,7 +13,7 @@ public class Main {
         weChatClient.showQRCode(uuid);
         weChatClient.waitForLogin();
         weChatClient.init();
-
+        weChatClient.getContacts();
     }
 
 }
