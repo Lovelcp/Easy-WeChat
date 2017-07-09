@@ -6,6 +6,7 @@ import com.wooyoo.wechat.repo.WeChatContacts;
 import com.wooyoo.wechat.service.ApiFactory;
 import com.wooyoo.wechat.service.WeChatContactService;
 import com.wooyoo.wechat.service.WeChatLoginService;
+import com.wooyoo.wechat.service.WeChatMessageService;
 
 import java.io.IOException;
 
@@ -16,6 +17,7 @@ public class WeChatClient {
      */
     protected WeChatLoginService weChatLoginService;
     protected WeChatContactService weChatContactService;
+    protected WeChatMessageService weChatMessageService;
 
     /**
      * wechat meta data
@@ -28,6 +30,10 @@ public class WeChatClient {
     public WeChatClient() {
         this.apiFactory = new ApiFactory(URLs.DEFAULT_BASE_LOGIN_URL);
         this.weChatLoginService = new WeChatLoginService(apiFactory);
+    }
+
+    public WeChatContext getWeChatContext() {
+        return weChatContext;
     }
 
     /**
@@ -60,6 +66,7 @@ public class WeChatClient {
         // services initialization
         // TODO
         this.weChatContactService = new WeChatContactService(weChatContext, apiFactory);
+        this.weChatMessageService = new WeChatMessageService(weChatContext, apiFactory);
     }
 
     /**
@@ -79,5 +86,16 @@ public class WeChatClient {
     public WeChatContacts getContacts() throws IOException {
         this.weChatContacts = weChatContactService.getContacts();
         return weChatContacts;
+    }
+
+    /**
+     * 发送消息
+     *
+     * @param toUserName
+     * @param msg
+     * @throws IOException
+     */
+    public void sendTextMessage(String toUserName, String msg) throws IOException {
+        weChatMessageService.sendTextMessage(toUserName, msg);
     }
 }

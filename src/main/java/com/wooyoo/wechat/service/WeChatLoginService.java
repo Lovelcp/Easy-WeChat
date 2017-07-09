@@ -143,5 +143,6 @@ public class WeChatLoginService {
                 new InitRequest(weChatContext.getUin(), weChatContext.getSid(), weChatContext.getSkey()));
         Response<InitResponse> response = responseCall.execute();
         InitResponse initResponse = response.body();
+        weChatContext.setSelf(initResponse.getUser());
     }
 }

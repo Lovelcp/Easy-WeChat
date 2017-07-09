@@ -1,5 +1,9 @@
 package com.wooyoo.wechat.http;
 
+import com.wooyoo.wechat.http.model.User;
+import com.wooyoo.wechat.http.request.common.BaseRequest;
+import com.wooyoo.wechat.util.WeChatUtil;
+
 public class WeChatContext {
     private WeChatHosts weChatHosts;
 
@@ -7,6 +11,8 @@ public class WeChatContext {
     private String sid;
     private Long uin;
     private String passTicket;
+
+    private User self; // 自己
 
     public String getSkey() {
         return skey;
@@ -46,6 +52,14 @@ public class WeChatContext {
 
     public void setWeChatHosts(WeChatHosts weChatHosts) {
         this.weChatHosts = weChatHosts;
+    }
+
+    public User getSelf() {
+        return self;
+    }
+
+    public void setSelf(User self) {
+        this.self = self;
     }
 
     public static class WeChatHosts {
@@ -98,4 +112,16 @@ public class WeChatContext {
         return "WeChatContext{" + "wxHost=" + weChatHosts + ", skey='" + skey + '\'' + ", sid='" + sid + '\'' + ", uin=" + uin + ", passTicket='" + passTicket
                 + '\'' + '}';
     }
+
+    //
+    // 其他方法
+    //
+
+    /**
+     * @return
+     */
+    public BaseRequest getBaseRequest() {
+        return new BaseRequest(this.uin, this.sid, this.skey, WeChatUtil.generateDeviceID());
+    }
+
 }

@@ -63,4 +63,13 @@ public final class WeChatUtil {
         weChatHosts.setWebpushHost(webpushHost);
         return weChatHosts;
     }
+
+    /**
+     * 生成ClientMsgId：毫秒级时间戳加上4位随机数
+     *
+     * @return
+     */
+    public static String generateClientMsgId() {
+        return String.valueOf(System.currentTimeMillis()) + RandomUtil.generateRandomNumbers(4);
+    }
 }

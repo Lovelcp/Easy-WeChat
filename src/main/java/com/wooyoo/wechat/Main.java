@@ -1,5 +1,7 @@
 package com.wooyoo.wechat;
 
+import com.wooyoo.wechat.constant.UserNameConstants;
+
 import java.io.IOException;
 
 public class Main {
@@ -14,6 +16,9 @@ public class Main {
         weChatClient.waitForLogin();
         weChatClient.init();
         weChatClient.getContacts();
+
+        // send to 文档传输助手
+        weChatClient.sendTextMessage(UserNameConstants.FILE_HELPER, "你好");
     }
 
 }
