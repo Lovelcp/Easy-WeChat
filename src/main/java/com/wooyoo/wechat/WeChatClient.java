@@ -98,4 +98,15 @@ public class WeChatClient {
     public void sendTextMessage(String toUserName, String msg) throws IOException {
         weChatMessageService.sendTextMessage(toUserName, msg);
     }
+
+    /**
+     * 撤回消息
+     *
+     * @param msgId
+     * @param toUserName
+     * @throws IOException
+     */
+    public void revokeMessage(String msgId, String toUserName) throws IOException {
+        weChatMessageService.revokeMessage(msgId, toUserName);
+    }
 }

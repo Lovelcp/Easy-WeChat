@@ -5,6 +5,9 @@ import retrofit2.Call;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+/**
+ * 联系人相关的接口
+ */
 public interface WeChatContactApi {
     /**
      * 获取微信联系人

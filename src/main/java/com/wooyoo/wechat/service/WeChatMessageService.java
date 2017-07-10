@@ -2,7 +2,9 @@ package com.wooyoo.wechat.service;
 
 import com.wooyoo.wechat.http.WeChatContext;
 import com.wooyoo.wechat.http.api.WeChatMessageApi;
+import com.wooyoo.wechat.http.request.message.RevokeMsgRequest;
 import com.wooyoo.wechat.http.request.message.SendTextMsgRequest;
+import com.wooyoo.wechat.http.response.message.RevokeMsgResponse;
 import com.wooyoo.wechat.http.response.message.SendTextMsgResponse;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -35,5 +37,18 @@ public class WeChatMessageService {
                 toUserName, msg));
         Response<SendTextMsgResponse> response = responseCall.execute();
         SendTextMsgResponse responseBody = response.body();
+    }
+
+    /**
+     * 撤回消息
+     *
+     * @param msgId
+     * @param toUserName
+     * @throws IOException
+     */
+    public void revokeMessage(String msgId, String toUserName) throws IOException {
+        Call<RevokeMsgResponse> responseCall = weChatMessageApi.revokeMessage(new RevokeMsgRequest(weChatContext.getBaseRequest(), msgId, toUserName));
+        Response<RevokeMsgResponse> response = responseCall.execute();
+        RevokeMsgResponse responseBody = response.body();
     }
 }
