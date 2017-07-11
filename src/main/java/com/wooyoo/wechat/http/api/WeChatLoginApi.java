@@ -1,7 +1,9 @@
 package com.wooyoo.wechat.http.api;
 
 import com.wooyoo.wechat.http.request.login.InitRequest;
+import com.wooyoo.wechat.http.request.login.StatusNotifyRequest;
 import com.wooyoo.wechat.http.response.login.InitResponse;
+import com.wooyoo.wechat.http.response.login.StatusNotifyResponse;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -89,4 +91,18 @@ public interface WeChatLoginApi {
                     String skey,
             @Body
                     InitRequest initRequest);
+
+    /**
+     * 打开微信状态通知
+     *
+     * @param passTicket
+     * @param statusNotifyRequest
+     * @return
+     */
+    @POST("cgi-bin/mmwebwx-bin/webwxstatusnotify")
+    Call<StatusNotifyResponse> openStatusNotify(
+            @Query("pass_ticket")
+                    String passTicket,
+            @Body
+                    StatusNotifyRequest statusNotifyRequest);
 }

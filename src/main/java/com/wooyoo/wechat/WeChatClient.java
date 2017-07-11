@@ -79,6 +79,15 @@ public class WeChatClient {
     }
 
     /**
+     * 打开微信状态通知
+     *
+     * @throws IOException
+     */
+    public void openStatusNotify() throws IOException {
+        weChatLoginService.openStatusNotify();
+    }
+
+    /**
      * 加载联系人
      *
      * @throws IOException

@@ -5,7 +5,9 @@ import com.wooyoo.wechat.exception.WeChatException;
 import com.wooyoo.wechat.http.WeChatContext;
 import com.wooyoo.wechat.http.api.WeChatLoginApi;
 import com.wooyoo.wechat.http.request.login.InitRequest;
+import com.wooyoo.wechat.http.request.login.StatusNotifyRequest;
 import com.wooyoo.wechat.http.response.login.InitResponse;
+import com.wooyoo.wechat.http.response.login.StatusNotifyResponse;
 import com.wooyoo.wechat.util.HttpUtil;
 import com.wooyoo.wechat.util.QRCodeUtil;
 import com.wooyoo.wechat.util.RegexUtil;
@@ -81,6 +83,12 @@ public class WeChatLoginService {
         });
     }
 
+    /**
+     * 等待登录
+     *
+     * @return
+     * @throws IOException
+     */
     public WeChatContext waitForLogin() throws IOException {
         while (true) {
             Call<ResponseBody> waitCall = weChatLoginApi.waitForLogin(true, uuid, 0);
@@ -138,11 +146,29 @@ public class WeChatLoginService {
         return weChatContext;
     }
 
+    /**
+     * 微信初始化
+     *
+     * @throws IOException
+     */
     public void init() throws IOException {
         Call<InitResponse> responseCall = weChatLoginApi.init(weChatContext.getPassTicket(), weChatContext.getSkey(),
                 new InitRequest(weChatContext.getUin(), weChatContext.getSid(), weChatContext.getSkey()));
         Response<InitResponse> response = responseCall.execute();
         InitResponse initResponse = response.body();
         weChatContext.setSelf(initResponse.getUser());
+    }
+
+    /**
+     * 打开微信状态通知
+     *
+     * @throws IOException
+     */
+    public void openStatusNotify() throws IOException {
+        Call<StatusNotifyResponse> responseCall = weChatLoginApi.openStatusNotify(weChatContext.getPassTicket(),
+                new StatusNotifyRequest(weChatContext.getBaseRequest(), weChatContext.getSelf()
+                                                                                     .getUserName()));
+        Response<StatusNotifyResponse> response = responseCall.execute();
+        StatusNotifyResponse statusNotifyResponse = response.body();
     }
 }
